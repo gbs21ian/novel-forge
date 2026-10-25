@@ -1,0 +1,9 @@
+{
+  "id": "novel-forge",
+  "name": "Novel Forge - Web Novel Studio",
+  "version": "1.2.2",
+  "minAppVersion": "1.5.0",
+  "description": "Korean web novel studio with BYOK AI, source-backed retrieval, style profiles, manuscript backups, and optional private GitHub release updates.",
+  "author": "Novel Forge",
+  "isDesktopOnly": false
+}
