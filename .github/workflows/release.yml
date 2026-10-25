@@ -1,0 +1,30 @@
+name: Publish Novel Forge
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+permissions:
+  contents: write
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify version tag matches manifest
+        shell: bash
+        run: |
+          node -e "const x=require('./manifest.json');if(process.env.GITHUB_REF_NAME!=='v'+x.version)throw Error('Tag and manifest version differ')"
+      - name: Build and test
+        run: |
+          node build.js
+          node --check main.js
+          node tests/core.test.js
+          node tests/test.js
+          node tests/updater.test.js
+      - name: Publish GitHub Release with required standalone assets
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release create "$GITHUB_REF_NAME" main.js manifest.json styles.css --repo "$GITHUB_REPOSITORY" --verify-tag --generate-notes
